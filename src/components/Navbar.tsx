@@ -40,15 +40,6 @@ export default function Navbar() {
           >
             Track Progress
           </Link>
-
-          <Link
-            to="/login"
-            className={`hover:text-blue-950 transition ${
-              location.pathname === '/login' ? 'text-blue-950 font-medium' : ''
-            }`}
-          >
-            Sign In
-          </Link>
         </div>
 
         {/* Desktop Buttons */}

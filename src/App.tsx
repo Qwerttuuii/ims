@@ -7,16 +7,22 @@ import Track from './pages/Track';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
-// Protected & Layout
+// Protected & Layouts
 import ProtectedRoute from './components/ProtectedRoute';
 import RoleBasedRedirect from './components/RoleBasedRedirect';
 import DashboardLayout from './layouts/DashboardLayout';
+import CompanyDashboardLayout from './layouts/CompanyDashboardLayout';
 
 // Student Pages
 import StudentDashboard from './pages/dashboard/StudentDashboard';
+import StudentOpportunities from './pages/dashboard/StudentOpportunities';
+import StudentApplications from './pages/dashboard/StudentApplications';
+// Company Pages
+import CompanyOverview from './pages/dashboard/CompanyOverview';
+import CompanyOpenings from './pages/dashboard/CompanyOpenings';
+import CompanyApplicants from './pages/dashboard/CompanyApplicants';   // ← Add this import
 
-// Placeholder pages (you can replace these later)
-const Opportunities = () => <div className="p-8 text-2xl">Opportunities Page - Coming Soon</div>;
+// Placeholders
 const Logbook = () => <div className="p-8 text-2xl">Weekly Logbook Page - Coming Soon</div>;
 const Applications = () => <div className="p-8 text-2xl">My Applications Page - Coming Soon</div>;
 
@@ -24,39 +30,38 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* ===================== PUBLIC ROUTES ===================== */}
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/track" element={<Track />} />
-
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* ===================== PROTECTED ROUTES ===================== */}
+        {/* Protected Routes */}
         <Route path="/dashboard" element={<ProtectedRoute />}>
-          {/* Default /dashboard → Role-based redirect */}
           <Route index element={<RoleBasedRedirect />} />
 
-          {/* ==================== STUDENT DASHBOARD ==================== */}
+          {/* Student Dashboard */}
           <Route path="student" element={<DashboardLayout />}>
             <Route index element={<StudentDashboard />} />
-            <Route path="opportunities" element={<Opportunities />} />
+            <Route path="opportunities" element={<StudentOpportunities />} />
             <Route path="logbook" element={<Logbook />} />
             <Route path="applications" element={<Applications />} />
+            <Route path="applications" element={<StudentApplications />} />
           </Route>
 
-          {/* ==================== FUTURE DASHBOARDS ==================== */}
           {/* Company Dashboard */}
-          <Route path="company" element={<div className="p-10 text-3xl">Company Dashboard (Coming Soon)</div>} />
+          <Route path="company" element={<CompanyDashboardLayout />}>
+            <Route index element={<CompanyOverview />} />
+            <Route path="openings" element={<CompanyOpenings />} />
+            <Route path="applicants" element={<CompanyApplicants />} />
+          </Route>
 
-          {/* Supervisor Dashboard */}
+          {/* Future Roles */}
           <Route path="supervisor" element={<div className="p-10 text-3xl">Supervisor Dashboard (Coming Soon)</div>} />
-
-          {/* Admin Dashboard */}
           <Route path="admin" element={<div className="p-10 text-3xl">Admin Dashboard (Coming Soon)</div>} />
         </Route>
 
-        {/* Fallback Route */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

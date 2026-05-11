@@ -30,7 +30,7 @@ export default function DashboardLayout() {
             .from('profiles')
             .select('full_name, role')
             .eq('id', authUser.id)
-            .single();
+            .maybeSingle();
 
           setUser({ ...authUser, ...profile });
         }

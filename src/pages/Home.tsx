@@ -13,7 +13,7 @@ function Home() {
           <div className="space-y-8">
             <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-sm">
               <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-              Now in pilot with three Nigerian universities
+            Active For Students
             </div>
 
             <h1 className="text-6xl md:text-7xl font-bold tracking-tighter leading-tight">

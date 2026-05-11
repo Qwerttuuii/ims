@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { GraduationCap, Search, ArrowRight } from 'lucide-react';
+import Navbar from '../components/Navbar';
 
 export default function Track() {
   const [studentId, setStudentId] = useState('');
@@ -32,7 +33,9 @@ export default function Track() {
   const exampleIds = ["STU/2024/001", "STU/2024/002", "STU/2024/003"];
 
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-zinc-50">
       <div className="pt-28 pb-20 px-6">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-12">
@@ -134,5 +137,7 @@ export default function Track() {
         </div>
       </div>
     </div>
+    </>
   );
+
 }

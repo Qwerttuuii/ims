@@ -14,29 +14,36 @@ export default function RoleBasedRedirect() {
         return;
       }
 
-      const { data: profile } = await supabase
+      const { data: profile, error } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', user.id)
-        .single();
+        .maybeSingle(); // ← won't throw if no row found
+
+      if (error) {
+        console.error('Role fetch error:', error.message);
+        navigate('/login');
+        return;
+      }
 
       const role = profile?.role?.toLowerCase();
 
       switch (role) {
         case 'student':
-          navigate('/dashboard/student');
+          navigate('/dashboard/student', { replace: true });
           break;
         case 'company':
-          navigate('/dashboard/company');
+          navigate('/dashboard/company', { replace: true });
           break;
         case 'supervisor':
-          navigate('/dashboard/supervisor');
+          navigate('/dashboard/supervisor', { replace: true });
           break;
         case 'admin':
-          navigate('/dashboard/admin');
+          navigate('/dashboard/admin', { replace: true });
           break;
         default:
-          navigate('/dashboard/student'); // fallback
+          console.warn('Unknown role:', role);
+          navigate('/dashboard/student', { replace: true });
       }
     };
 
@@ -45,7 +52,10 @@ export default function RoleBasedRedirect() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-50">
-      <div className="text-lg">Redirecting to your dashboard...</div>
+      <div className="text-center">
+        <div className="w-10 h-10 border-4 border-blue-950 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+        <p className="text-zinc-500 text-sm">Redirecting to your dashboard...</p>
+      </div>
     </div>
   );
 }

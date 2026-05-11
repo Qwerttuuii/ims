@@ -19,23 +19,20 @@ export default function StudentDashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Step 1: Get auth user
         const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
-        
+
         if (authError || !authUser) {
           setError('Not authenticated.');
           return;
         }
 
-        // Step 2: Fetch profile using auth UID
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('full_name, student_id, department, role')
           .eq('id', authUser.id)
-          .maybeSingle(); // use maybeSingle instead of single — won't throw if no rows
+          .maybeSingle();
 
         if (profileError) {
-          console.error('Profile error:', profileError.message);
           setError('Could not load your profile.');
           return;
         }
@@ -47,9 +44,9 @@ export default function StudentDashboard() {
 
         setProfile(profileData);
 
-        // Step 3: Fetch logbook entries
+        // ✅ Fixed: was 'logbook', correct table is 'logbooks'
         const { data: logsData } = await supabase
-          .from('logs')
+          .from('logbooks')
           .select('*')
           .eq('student_id', authUser.id)
           .order('created_at', { ascending: false })
@@ -57,10 +54,9 @@ export default function StudentDashboard() {
 
         setLogs(logsData || []);
 
-        // Step 4: Fetch placement
         const { data: placementData } = await supabase
           .from('placements')
-          .select('*, company:companies(name)')
+          .select('*')
           .eq('student_id', authUser.id)
           .maybeSingle();
 
@@ -227,9 +223,7 @@ export default function StudentDashboard() {
 
             {placement ? (
               <>
-                <h2 className="text-2xl font-semibold">
-                  {placement.company?.name || placement.company_name || 'Company'}
-                </h2>
+                <h2 className="text-2xl font-semibold">{placement.company_name}</h2>
                 <div className="mt-6 space-y-5 flex-1">
                   <div>
                     <p className="text-blue-300 text-xs mb-1">Supervisor</p>
