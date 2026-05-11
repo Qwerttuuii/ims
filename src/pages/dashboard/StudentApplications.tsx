@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Briefcase, Calendar, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Briefcase } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 export default function StudentApplications() {
