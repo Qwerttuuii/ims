@@ -101,22 +101,22 @@ export default function StudentDashboard() {
   return (
     <div className="min-h-screen bg-zinc-50">
       {/* Header */}
-      <div className="bg-white border-b border-zinc-200 px-8 py-6">
-        <div className="flex justify-between items-start">
+      <div className="bg-white border-b border-zinc-200 px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex flex-col gap-4 xl:flex-row xl:justify-between xl:items-start">
           <div>
-            <h1 className="text-4xl font-semibold tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">
               Welcome back, {firstName}
             </h1>
             <p className="text-zinc-500 mt-1 text-sm">
               {profile?.student_id || 'N/A'} • {profile?.department || 'Unknown Department'}
             </p>
           </div>
-          <div className="flex gap-3">
-            <button className="flex items-center gap-2 px-6 py-3 bg-white border border-zinc-300 rounded-2xl hover:bg-zinc-50 transition font-medium text-sm">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button className="flex items-center justify-center gap-2 px-5 sm:px-6 py-3 bg-white border border-zinc-300 rounded-2xl hover:bg-zinc-50 transition font-medium text-sm">
               <Briefcase className="w-4 h-4" />
               Browse opportunities
             </button>
-            <button className="flex items-center gap-2 px-6 py-3 bg-blue-950 text-white rounded-2xl hover:bg-blue-900 transition font-medium text-sm">
+            <button className="flex items-center justify-center gap-2 px-5 sm:px-6 py-3 bg-blue-950 text-white rounded-2xl hover:bg-blue-900 transition font-medium text-sm">
               <ArrowRight className="w-4 h-4" />
               Submit weekly log
             </button>
@@ -124,11 +124,11 @@ export default function StudentDashboard() {
         </div>
       </div>
 
-      <div className="p-8">
+      <div className="p-4 sm:p-6 lg:p-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
           {/* Stats */}
-          <div className="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
               {
                 label: 'PROGRESS',
@@ -161,11 +161,11 @@ export default function StudentDashboard() {
                 color: 'text-purple-600',
               },
             ].map((stat, i) => (
-              <div key={i} className="bg-white rounded-3xl p-6 shadow-sm">
+              <div key={i} className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-xs text-zinc-400 font-semibold tracking-widest">{stat.label}</p>
-                    <p className={`text-5xl font-semibold mt-2 ${stat.color}`}>{stat.value}</p>
+                    <p className={`text-4xl sm:text-5xl font-semibold mt-2 ${stat.color}`}>{stat.value}</p>
                     <p className="text-xs text-zinc-500 mt-1">{stat.sub}</p>
                   </div>
                   <stat.icon className={`w-8 h-8 ${stat.color} opacity-70`} />
@@ -175,9 +175,9 @@ export default function StudentDashboard() {
           </div>
 
           {/* Logbook */}
-          <div className="lg:col-span-7 bg-white rounded-3xl p-8 shadow-sm">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold">Recent logbook entries</h2>
+          <div className="lg:col-span-7 bg-white rounded-3xl p-5 sm:p-8 shadow-sm">
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <h2 className="text-lg sm:text-xl font-semibold">Recent logbook entries</h2>
               <button className="text-blue-600 text-sm font-medium flex items-center gap-1 hover:underline">
                 View all <ArrowRight className="w-4 h-4" />
               </button>
@@ -186,8 +186,8 @@ export default function StudentDashboard() {
             {logs.length > 0 ? (
               <div className="space-y-5">
                 {logs.map((log) => (
-                  <div key={log.id} className="flex gap-5 pb-5 border-b border-zinc-100 last:border-0 last:pb-0">
-                    <div className="w-20 shrink-0">
+                  <div key={log.id} className="flex flex-col gap-3 sm:flex-row sm:gap-5 pb-5 border-b border-zinc-100 last:border-0 last:pb-0">
+                    <div className="sm:w-20 shrink-0">
                       <p className="text-xs font-mono text-zinc-400 uppercase">Week {log.week}</p>
                       <p className="text-xs text-zinc-400 mt-0.5">
                         {new Date(log.created_at).toLocaleDateString()}
@@ -218,7 +218,7 @@ export default function StudentDashboard() {
           </div>
 
           {/* Placement */}
-          <div className="lg:col-span-5 bg-gradient-to-br from-blue-950 to-blue-900 text-white rounded-3xl p-8 shadow-sm flex flex-col">
+          <div className="lg:col-span-5 bg-gradient-to-br from-blue-950 to-blue-900 text-white rounded-3xl p-5 sm:p-8 shadow-sm flex flex-col">
             <p className="uppercase tracking-widest text-blue-400 text-xs mb-2">Current Placement</p>
 
             {placement ? (
@@ -229,7 +229,7 @@ export default function StudentDashboard() {
                     <p className="text-blue-300 text-xs mb-1">Supervisor</p>
                     <p className="font-medium text-sm">{placement.supervisor_name || 'Not Assigned'}</p>
                   </div>
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
                       <p className="text-blue-300 text-xs mb-1">Start Date</p>
                       <p className="font-medium text-sm">{new Date(placement.start_date).toLocaleDateString()}</p>

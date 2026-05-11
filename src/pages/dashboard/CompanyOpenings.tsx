@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { Plus, Briefcase, MapPin, Clock, Calendar, Trash2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import PostOpeningModal from '../../components/PostOpeningModal';
+import { useAppAlert } from '../../components/AppAlert';
 
 export default function CompanyOpenings() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openings, setOpenings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const { showAlert } = useAppAlert();
 
   useEffect(() => {
     fetchOpenings();
@@ -46,7 +48,11 @@ export default function CompanyOpenings() {
       setOpenings(prev => prev.filter(o => o.id !== id));
     } catch (err: any) {
       console.error(err);
-      alert('Failed to delete: ' + err.message);
+      showAlert({
+        title: 'Delete failed',
+        message: err.message,
+        variant: 'error',
+      });
     } finally {
       setDeleting(null);
     }
@@ -76,20 +82,20 @@ export default function CompanyOpenings() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 p-6 lg:p-8">
+    <div className="min-h-screen bg-zinc-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-semibold">Openings</h1>
+            <h1 className="text-2xl sm:text-3xl font-semibold">Openings</h1>
             <p className="text-zinc-500 mt-1 text-sm">
               {openings.length} posting{openings.length !== 1 ? 's' : ''} total
             </p>
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-blue-950 text-white px-6 py-3 rounded-2xl hover:bg-blue-900 transition font-medium"
+            className="flex w-full sm:w-auto items-center justify-center gap-2 bg-blue-950 text-white px-5 sm:px-6 py-3 rounded-2xl hover:bg-blue-900 transition font-medium"
           >
             <Plus className="w-5 h-5" />
             Post New Opening
@@ -98,21 +104,21 @@ export default function CompanyOpenings() {
 
         {/* Empty state */}
         {openings.length === 0 ? (
-          <div className="bg-white rounded-3xl p-16 text-center shadow-sm">
+          <div className="bg-white rounded-3xl p-8 sm:p-16 text-center shadow-sm">
             <Briefcase className="w-16 h-16 text-zinc-200 mx-auto mb-4" />
             <h3 className="text-xl font-medium text-zinc-400">No openings posted yet</h3>
             <p className="text-zinc-400 text-sm mt-2">Click "Post New Opening" to get started</p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
             {openings.map((opening) => (
-              <div key={opening.id} className="bg-white rounded-3xl p-6 shadow-sm border border-zinc-100 hover:border-blue-200 transition">
-                <div className="flex justify-between items-start mb-4">
+              <div key={opening.id} className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-zinc-100 hover:border-blue-200 transition">
+                <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-start mb-4">
                   <div className="flex-1">
                     <h3 className="font-semibold text-lg leading-tight">{opening.title}</h3>
                     <p className="text-sm text-zinc-500 mt-1">{opening.sector}</p>
                   </div>
-                  <span className={`ml-3 shrink-0 text-xs px-3 py-1 rounded-full font-medium ${
+                  <span className={`w-fit sm:ml-3 shrink-0 text-xs px-3 py-1 rounded-full font-medium ${
                     opening.status === 'active'
                       ? 'bg-emerald-100 text-emerald-700'
                       : 'bg-zinc-100 text-zinc-500'

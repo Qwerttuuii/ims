@@ -63,36 +63,36 @@ export default function StudentOpportunities() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 p-6 lg:p-8">
+    <div className="min-h-screen bg-zinc-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-semibold tracking-tight">Internship Opportunities</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">Internship Opportunities</h1>
           <p className="text-zinc-600 mt-2">Discover and apply to active internship positions</p>
         </div>
 
         {openings.length === 0 ? (
-          <div className="bg-white rounded-3xl p-16 text-center shadow-sm">
+          <div className="bg-white rounded-3xl p-8 sm:p-16 text-center shadow-sm">
             <Briefcase className="w-16 h-16 mx-auto text-zinc-300 mb-4" />
             <h3 className="text-2xl font-medium text-zinc-400">No openings available right now</h3>
             <p className="text-zinc-500 mt-2">Check back later for new opportunities</p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
             {openings.map((opening) => {
               const isApplied = appliedOpeningIds.has(opening.id);
 
               return (
                 <div
                   key={opening.id}
-                  className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-md transition-all border border-zinc-100"
+                  className="bg-white rounded-3xl p-5 sm:p-8 shadow-sm hover:shadow-md transition-all border border-zinc-100"
                 >
-                  <div className="flex justify-between items-start">
-                    <div>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-start">
+                    <div className="min-w-0">
                       <h3 className="text-xl font-semibold leading-tight">{opening.title}</h3>
                       <p className="text-blue-600 font-medium mt-1">{opening.sector || 'General'}</p>
                     </div>
                     {isApplied && (
-                      <div className="flex items-center gap-1 text-emerald-600 text-sm font-medium">
+                      <div className="flex shrink-0 items-center gap-1 text-emerald-600 text-sm font-medium">
                         <CheckCircle className="w-5 h-5" />
                         Applied
                       </div>

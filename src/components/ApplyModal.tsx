@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useAppAlert } from './AppAlert';
 
 interface ApplyModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ export default function ApplyModal({ isOpen, onClose, opening, onSuccess }: Appl
   const [coverLetter, setCoverLetter] = useState('');
   const [cgpa, setCgpa] = useState('');
   const [loading, setLoading] = useState(false);
+  const { showAlert } = useAppAlert();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,14 +35,22 @@ export default function ApplyModal({ isOpen, onClose, opening, onSuccess }: Appl
 
       if (error) throw error;
 
-      alert('Application submitted successfully!');
+      showAlert({
+        title: 'Application sent',
+        message: 'Your application was submitted successfully.',
+        variant: 'success',
+      });
       onSuccess();
       onClose();
       setCoverLetter('');
       setCgpa('');
     } catch (err: any) {
       console.error(err);
-      alert('Failed to submit application: ' + err.message);
+      showAlert({
+        title: 'Could not submit application',
+        message: err.message,
+        variant: 'error',
+      });
     } finally {
       setLoading(false);
     }
@@ -49,9 +59,9 @@ export default function ApplyModal({ isOpen, onClose, opening, onSuccess }: Appl
   if (!isOpen || !opening) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-hidden">
-        <div className="p-8 border-b">
+    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-3 sm:p-4">
+      <div className="bg-white rounded-3xl max-w-lg w-full max-h-[92vh] overflow-hidden">
+        <div className="p-5 sm:p-8 border-b">
           <div className="flex justify-between items-start">
             <div>
               <h2 className="text-2xl font-semibold">Apply for</h2>
@@ -63,7 +73,7 @@ export default function ApplyModal({ isOpen, onClose, opening, onSuccess }: Appl
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 space-y-6">
+        <form onSubmit={handleSubmit} className="p-5 sm:p-8 space-y-6 overflow-y-auto max-h-[calc(92vh-116px)]">
           <div>
             <label className="block text-sm font-medium mb-2">CGPA (Optional)</label>
             <input
@@ -88,7 +98,7 @@ export default function ApplyModal({ isOpen, onClose, opening, onSuccess }: Appl
             <p className="text-xs text-zinc-500 mt-2">Tell the company why they should choose you.</p>
           </div>
 
-          <div className="flex gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
             <button
               type="button"
               onClick={onClose}

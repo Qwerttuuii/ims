@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { GraduationCap, Building2, UserCheck, Shield, ArrowRight } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import { useAppAlert } from '../components/AppAlert';
 
 type Role = 'student' | 'company' | 'supervisor' | 'admin';
 
@@ -14,14 +15,14 @@ export default function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+  const { showAlert } = useAppAlert();
 
   // Show success message from registration
   useEffect(() => {
     if (location.state?.message) {
-      // You can show a toast here later
-      console.log(location.state.message);
+      showAlert({ title: 'Account ready', message: location.state.message, variant: 'success' });
     }
-  }, [location.state]);
+  }, [location.state, showAlert]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +37,7 @@ export default function Login() {
 
       if (signInError) throw signInError;
 
-      alert(`✅ Welcome back!`);
+      showAlert({ title: 'Welcome back', message: 'You have signed in successfully.', variant: 'success' });
       navigate('/dashboard'); // Redirect to dashboard after login
     } catch (err: any) {
       setError(err.message);

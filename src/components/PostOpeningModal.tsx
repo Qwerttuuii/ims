@@ -89,14 +89,14 @@ export default function PostOpeningModal({ isOpen, onClose, onSuccess }: PostOpe
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-3 sm:p-4">
+      <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-hidden flex flex-col">
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-950 to-blue-900 text-white p-8 shrink-0">
-          <div className="flex justify-between items-start">
+        <div className="bg-gradient-to-r from-blue-950 to-blue-900 text-white p-5 sm:p-8 shrink-0">
+          <div className="flex justify-between items-start gap-4">
             <div>
-              <h2 className="text-3xl font-semibold">New Opening</h2>
+              <h2 className="text-2xl sm:text-3xl font-semibold">New Opening</h2>
               <p className="text-blue-300 mt-1">Share the role details — applications open immediately</p>
             </div>
             <button
@@ -111,13 +111,13 @@ export default function PostOpeningModal({ isOpen, onClose, onSuccess }: PostOpe
 
         {/* Success state */}
         {success ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-12 text-center">
+          <div className="flex-1 flex flex-col items-center justify-center p-8 sm:p-12 text-center">
             <CheckCircle className="w-16 h-16 text-emerald-500 mb-4" />
             <h3 className="text-2xl font-semibold mb-2">Opening Published!</h3>
             <p className="text-zinc-500">Students can now apply for this position.</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-8 space-y-6 overflow-y-auto flex-1">
+          <form onSubmit={handleSubmit} className="p-5 sm:p-8 space-y-6 overflow-y-auto flex-1">
 
             {/* Error */}
             {error && (
@@ -126,7 +126,7 @@ export default function PostOpeningModal({ isOpen, onClose, onSuccess }: PostOpe
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-zinc-700 mb-2">Role Title</label>
                 <input
@@ -230,7 +230,7 @@ export default function PostOpeningModal({ isOpen, onClose, onSuccess }: PostOpe
               />
             </div>
 
-            <div className="flex gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2">
               <button
                 type="button"
                 onClick={handleClose}

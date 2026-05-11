@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Users, Mail, Award } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { useAppAlert } from '../../components/AppAlert';
 
 export default function CompanyApplicants() {
   const [applicants, setApplicants] = useState<any[]>([]);
@@ -9,6 +10,7 @@ export default function CompanyApplicants() {
   const [activeFilter, setActiveFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedApplicant, setSelectedApplicant] = useState<any>(null);
+  const { showAlert } = useAppAlert();
 
   useEffect(() => {
     fetchApplicants();
@@ -77,7 +79,11 @@ export default function CompanyApplicants() {
       setSelectedApplicant(null);
     } catch (err) {
       console.error(err);
-      alert('Failed to update status');
+      showAlert({
+        title: 'Status update failed',
+        message: 'Please try again in a moment.',
+        variant: 'error',
+      });
     }
   };
 
@@ -93,24 +99,24 @@ export default function CompanyApplicants() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 p-6 lg:p-8">
+    <div className="min-h-screen bg-zinc-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-semibold mb-2">Applicants</h1>
+        <h1 className="text-2xl sm:text-3xl font-semibold mb-2">Applicants</h1>
         <p className="text-zinc-600">Review every student who applied to your openings and respond.</p>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mt-8 mb-10">
           {[
             { label: 'TOTAL APPLICANTS', value: stats.total, icon: Users },
             { label: 'PENDING REVIEW', value: stats.pending, icon: Mail },
             { label: 'ACCEPTED', value: stats.accepted, icon: Award },
             { label: 'REJECTED', value: stats.rejected, icon: Users },
           ].map((stat, i) => (
-            <div key={i} className="bg-white rounded-3xl p-6 shadow-sm">
+            <div key={i} className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-zinc-500 font-medium">{stat.label}</p>
-                  <p className="text-4xl font-semibold mt-2">{stat.value}</p>
+                  <p className="text-3xl sm:text-4xl font-semibold mt-2">{stat.value}</p>
                 </div>
                 <stat.icon className="w-10 h-10 text-blue-600 opacity-80" />
               </div>
@@ -120,12 +126,12 @@ export default function CompanyApplicants() {
 
         {/* Filters */}
         <div className="flex flex-col md:flex-row gap-4 mb-6">
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 overflow-x-auto pb-1 md:flex-wrap md:overflow-visible">
             {(['all', 'pending', 'accepted', 'rejected'] as const).map((status) => (
               <button
                 key={status}
                 onClick={() => setActiveFilter(status)}
-                className={`px-5 py-2 rounded-full text-sm font-medium transition ${
+                className={`shrink-0 px-5 py-2 rounded-full text-sm font-medium transition ${
                   activeFilter === status
                     ? 'bg-blue-950 text-white'
                     : 'bg-white border border-zinc-200 hover:bg-zinc-50'
@@ -153,8 +159,9 @@ export default function CompanyApplicants() {
               <p className="text-zinc-400">No applicants yet</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <>
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full">
                 <thead>
                   <tr className="border-b bg-zinc-50">
                     <th className="text-left py-5 px-8 font-medium text-zinc-500">STUDENT</th>
@@ -194,17 +201,47 @@ export default function CompanyApplicants() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
-            </div>
+                </table>
+              </div>
+
+              <div className="divide-y divide-zinc-100 md:hidden">
+                {filteredApplicants.map((app) => (
+                  <button
+                    key={app.id}
+                    type="button"
+                    onClick={() => setSelectedApplicant(app)}
+                    className="w-full p-5 text-left hover:bg-zinc-50 transition"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="font-medium truncate">{app.student?.full_name}</p>
+                        <p className="text-sm text-zinc-500">{app.student?.student_id || 'No student ID'}</p>
+                      </div>
+                      <span className={`shrink-0 px-3 py-1 rounded-full text-xs font-medium capitalize ${
+                        app.status === 'accepted' ? 'bg-emerald-100 text-emerald-700' :
+                        app.status === 'rejected' ? 'bg-red-100 text-red-700' :
+                        'bg-amber-100 text-amber-700'
+                      }`}>
+                        {app.status || 'Pending'}
+                      </span>
+                    </div>
+                    <p className="mt-4 text-sm font-medium text-zinc-700">{app.opening?.title}</p>
+                    <p className="mt-1 text-xs text-zinc-500">
+                      Applied {new Date(app.created_at).toLocaleDateString()}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>
 
       {/* Applicant Detail Modal */}
       {selectedApplicant && (
-        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-8">
-            <h2 className="text-2xl font-semibold mb-6">Application Details</h2>
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[92vh] overflow-y-auto p-5 sm:p-8">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-6">Application Details</h2>
 
             <div className="space-y-6">
               <div>
@@ -227,7 +264,7 @@ export default function CompanyApplicants() {
                 </div>
               )}
 
-              <div className="flex gap-3 pt-6">
+              <div className="flex flex-col sm:flex-row gap-3 pt-6">
                 <button
                   onClick={() => handleStatusChange(selectedApplicant.id, 'rejected')}
                   className="flex-1 py-4 border border-red-200 text-red-600 rounded-2xl hover:bg-red-50 font-medium"

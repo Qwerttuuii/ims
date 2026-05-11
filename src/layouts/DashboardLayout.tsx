@@ -95,10 +95,10 @@ export default function DashboardLayout() {
   }
 
   return (
-    <div className="flex h-screen bg-zinc-50 overflow-hidden">
+    <div className="flex h-dvh bg-zinc-50 overflow-hidden">
       {/* Sidebar */}
       <div
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-[#0A2540] text-white transition-transform duration-300 ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-[min(18rem,85vw)] bg-[#0A2540] text-white transition-transform duration-300 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
@@ -157,12 +157,12 @@ export default function DashboardLayout() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-auto">
+      <div className="flex-1 flex flex-col min-h-dvh min-w-0 overflow-auto">
         {/* Mobile Top Header */}
        {/* Mobile Top Header */}
-<div className="lg:hidden bg-white border-b px-6 py-4 flex items-center justify-between sticky top-0 z-40">
+<div className="lg:hidden bg-white border-b px-4 sm:px-6 py-4 flex items-center justify-between sticky top-0 z-40">
   <div className="flex items-center gap-3">
-    <h1 className="text-2xl font-bold text-[#0A2540]">InternHub</h1>
+    <h1 className="text-xl sm:text-2xl font-bold text-[#0A2540]">InternHub</h1>
   </div>
 
   <button

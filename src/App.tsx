@@ -10,6 +10,7 @@ import Register from './pages/Register';
 // Protected & Layouts
 import ProtectedRoute from './components/ProtectedRoute';
 import RoleBasedRedirect from './components/RoleBasedRedirect';
+import { AppAlertProvider } from './components/AppAlert';
 import DashboardLayout from './layouts/DashboardLayout';
 import CompanyDashboardLayout from './layouts/CompanyDashboardLayout';
 
@@ -24,12 +25,12 @@ import CompanyApplicants from './pages/dashboard/CompanyApplicants';   // ← Ad
 
 // Placeholders
 const Logbook = () => <div className="p-8 text-2xl">Weekly Logbook Page - Coming Soon</div>;
-const Applications = () => <div className="p-8 text-2xl">My Applications Page - Coming Soon</div>;
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <AppAlertProvider>
+      <BrowserRouter>
+        <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -46,7 +47,6 @@ function App() {
             <Route index element={<StudentDashboard />} />
             <Route path="opportunities" element={<StudentOpportunities />} />
             <Route path="logbook" element={<Logbook />} />
-            <Route path="applications" element={<Applications />} />
             <Route path="applications" element={<StudentApplications />} />
           </Route>
 
@@ -63,8 +63,9 @@ function App() {
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </AppAlertProvider>
   );
 }
 

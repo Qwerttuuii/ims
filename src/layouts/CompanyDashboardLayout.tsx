@@ -54,9 +54,9 @@ export default function CompanyDashboardLayout() {
   const displayName = company?.company_name || company?.full_name || 'Company';
 
   return (
-    <div className="flex h-screen bg-zinc-50 overflow-hidden">
+    <div className="flex h-dvh bg-zinc-50 overflow-hidden">
       {/* Sidebar */}
-      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-[#0A2540] text-white transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+      <div className={`fixed lg:static inset-y-0 left-0 z-50 w-[min(18rem,85vw)] bg-[#0A2540] text-white transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         <div className="p-6">
           {/* Logo - Text Only */}
           <div className="mb-10">
@@ -107,9 +107,9 @@ export default function CompanyDashboardLayout() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-auto">
-        <div className="lg:hidden bg-white border-b px-6 py-4 flex items-center justify-between sticky top-0 z-40">
-          <h1 className="font-bold text-xl">InternHub</h1>
+      <div className="flex-1 flex flex-col min-w-0 overflow-auto">
+        <div className="lg:hidden bg-white border-b px-4 sm:px-6 py-4 flex items-center justify-between sticky top-0 z-40">
+          <h1 className="font-bold text-xl text-[#0A2540]">InternHub</h1>
           <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
             {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
           </button>

@@ -72,13 +72,13 @@ export default function CompanyOverview() {
   const activeOpenings = openings.filter(o => o.status === 'active').length;
 
   return (
-    <div className="min-h-screen bg-zinc-50 p-6 lg:p-8">
+    <div className="min-h-screen bg-zinc-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
-        <div className="flex justify-between items-start mb-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-8">
           <div>
-            <h1 className="text-4xl font-semibold tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">
               {company?.full_name || 'Your Company'}
             </h1>
             <p className="text-zinc-500 mt-1 text-sm">
@@ -87,7 +87,7 @@ export default function CompanyOverview() {
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-blue-950 text-white px-6 py-3 rounded-2xl hover:bg-blue-900 transition font-medium"
+            className="flex w-full sm:w-auto items-center justify-center gap-2 bg-blue-950 text-white px-5 sm:px-6 py-3 rounded-2xl hover:bg-blue-900 transition font-medium"
           >
             <Plus className="w-5 h-5" />
             Post Opening
@@ -95,18 +95,18 @@ export default function CompanyOverview() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
           {[
             { label: 'ACTIVE OPENINGS', value: activeOpenings, icon: Briefcase },
             { label: 'TOTAL APPLICANTS', value: applicants.length, icon: Users },
             { label: 'ACCEPTED INTERNS', value: applicants.filter(a => a.status === 'accepted').length, icon: UserCheck },
             { label: 'TOTAL POSTINGS', value: openings.length, icon: FileText },
           ].map((stat, i) => (
-            <div key={i} className="bg-white rounded-3xl p-6 shadow-sm">
+            <div key={i} className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-zinc-400 font-semibold tracking-widest">{stat.label}</p>
-                  <p className="text-4xl font-semibold mt-2">{stat.value}</p>
+                  <p className="text-3xl sm:text-4xl font-semibold mt-2">{stat.value}</p>
                 </div>
                 <stat.icon className="w-10 h-10 text-blue-600 opacity-70" />
               </div>
@@ -117,9 +117,9 @@ export default function CompanyOverview() {
         <div className="grid lg:grid-cols-12 gap-6">
 
           {/* Recent Applicants */}
-          <div className="lg:col-span-7 bg-white rounded-3xl p-8 shadow-sm">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold">Recent Applicants</h2>
+          <div className="lg:col-span-7 bg-white rounded-3xl p-5 sm:p-8 shadow-sm">
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <h2 className="text-xl sm:text-2xl font-semibold">Recent Applicants</h2>
               <button className="text-blue-600 font-medium hover:underline text-sm">View all</button>
             </div>
 
@@ -132,8 +132,8 @@ export default function CompanyOverview() {
             ) : (
               <div className="space-y-3">
                 {applicants.map((app) => (
-                  <div key={app.id} className="flex items-center justify-between p-4 hover:bg-zinc-50 rounded-2xl transition">
-                    <div>
+                  <div key={app.id} className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 hover:bg-zinc-50 rounded-2xl transition">
+                    <div className="min-w-0">
                       <p className="font-medium">{app.student?.full_name || 'Student'}</p>
                       <p className="text-sm text-zinc-500">
                         {app.student?.student_id} • {app.opening?.title}
@@ -153,9 +153,9 @@ export default function CompanyOverview() {
           </div>
 
           {/* Your Openings */}
-          <div className="lg:col-span-5 bg-white rounded-3xl p-8 shadow-sm">
+          <div className="lg:col-span-5 bg-white rounded-3xl p-5 sm:p-8 shadow-sm">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold">Your Openings</h2>
+              <h2 className="text-xl sm:text-2xl font-semibold">Your Openings</h2>
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="text-blue-600 text-sm font-medium hover:underline"
@@ -178,9 +178,9 @@ export default function CompanyOverview() {
             ) : (
               <div className="space-y-4">
                 {openings.slice(0, 4).map((opening) => (
-                  <div key={opening.id} className="border border-zinc-100 rounded-2xl p-5 hover:border-blue-200 transition">
-                    <div className="flex justify-between items-start">
-                      <div>
+                  <div key={opening.id} className="border border-zinc-100 rounded-2xl p-4 sm:p-5 hover:border-blue-200 transition">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-start">
+                      <div className="min-w-0">
                         <p className="font-semibold">{opening.title}</p>
                         <p className="text-sm text-zinc-500 mt-0.5">
                           {opening.sector} • {opening.duration}
