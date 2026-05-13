@@ -49,16 +49,16 @@ export default function Login() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-zinc-50 pt-20 pb-12">
-      <div className="max-w-md mx-auto px-6">
-        <div className="bg-white rounded-3xl shadow-2xl p-10">
+      <div className="min-h-screen bg-zinc-50 pt-20 sm:pt-24 pb-12">
+      <div className="max-w-md mx-auto px-4 sm:px-6">
+        <div className="bg-white rounded-3xl shadow-2xl p-5 sm:p-10">
           <div className="text-center mb-10">
             <div className="flex justify-center mb-4">
               <div className="w-14 h-14 bg-blue-950 rounded-2xl flex items-center justify-center">
                 <GraduationCap className="w-8 h-8 text-white" />
               </div>
             </div>
-            <h2 className="text-3xl font-bold tracking-tight">Sign in</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Sign in</h2>
             <p className="text-zinc-600 mt-2">Welcome back! Choose your role to continue.</p>
           </div>
 
@@ -69,7 +69,7 @@ export default function Login() {
           )}
 
           {/* Role Selection */}
-          <div className="grid grid-cols-2 gap-3 mb-10">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-10">
             {[
               { role: 'student', label: 'Student', icon: GraduationCap },
               { role: 'company', label: 'Company', icon: Building2 },
@@ -79,7 +79,7 @@ export default function Login() {
               <button
                 key={role}
                 onClick={() => setSelectedRole(role as Role)}
-                className={`flex flex-col items-center justify-center gap-2 py-4 border-2 rounded-2xl transition-all ${
+                className={`flex flex-col items-center justify-center gap-2 py-3 sm:py-4 border-2 rounded-2xl transition-all ${
                   selectedRole === role
                     ? 'border-blue-950 bg-blue-50 shadow-sm'
                     : 'border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50'

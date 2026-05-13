@@ -8,35 +8,35 @@ function Home() {
     <div className="min-h-screen bg-white">
       <Navbar />
       {/* Hero Section */}
-      <section className="pt-28 pb-20 px-6 max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
+      <section className="pt-24 sm:pt-28 pb-14 sm:pb-20 px-4 sm:px-6 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-10 lg:gap-12 items-center">
+          <div className="space-y-6 sm:space-y-8">
             <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-sm">
               <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
             Active For Students
             </div>
 
-            <h1 className="text-6xl md:text-7xl font-bold tracking-tighter leading-tight">
+            <h1 className="text-4xl min-[380px]:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight">
               The End Of The<br />
               <span className="text-blue-950">Paper Logbook.</span>
             </h1>
 
-            <p className="text-xl text-zinc-600 max-w-lg">
+            <p className="text-base sm:text-lg lg:text-xl text-zinc-600 max-w-lg">
               InternHub is the modern record of student industrial training. 
               From placement letters to weekly entries to supervisor evaluation 
               every signature, every score, in one auditable place.
             </p>
 
-            <div className="flex flex-wrap gap-4">
-              <Link to="/register">
-                <button className="px-8 py-4 bg-blue-950 text-white rounded-2xl font-medium flex items-center gap-3 hover:bg-blue-900 transition text-lg">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4">
+              <Link to="/register" className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto px-5 sm:px-8 py-3.5 sm:py-4 bg-blue-950 text-white rounded-2xl font-medium flex items-center justify-center gap-3 hover:bg-blue-900 transition text-base sm:text-lg">
                   Open a student account
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </Link>
 
-              <Link to="/track">
-                <button className="px-8 py-4 border border-zinc-300 hover:border-zinc-400 rounded-2xl font-medium flex items-center gap-3 transition text-lg">
+              <Link to="/track" className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto px-5 sm:px-8 py-3.5 sm:py-4 border border-zinc-300 hover:border-zinc-400 rounded-2xl font-medium flex items-center justify-center gap-3 transition text-base sm:text-lg">
                   Track a student by ID
                   <ArrowRight className="w-5 h-5" />
                 </button>
@@ -66,7 +66,7 @@ function Home() {
       </section>
       {/* Trusted By */}
       <section className="py-10 border-t border-b bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <p className="text-center text-sm text-zinc-500 mb-6">TRUSTED BY UNIVERSITIES & INDUSTRY PARTNERS</p>
           <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-6 text-lg opacity-75">
             <p className="font-semibold">University of Lagos</p>
@@ -79,11 +79,11 @@ function Home() {
       </section>
 
       {/* What You Actually Get */}
-      <section className="py-20 bg-zinc-50 px-6">
+      <section className="py-14 sm:py-20 bg-zinc-50 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-blue-600 font-medium">02 — WHAT YOU ACTUALLY GET</p>
-            <h2 className="text-5xl font-bold mt-3 tracking-tight">A logbook that doesn't go missing the night before submission.</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 tracking-tight">A logbook that doesn't go missing the night before submission.</h2>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -93,7 +93,7 @@ function Home() {
               { icon: Award, title: "ID-based progress tracking", desc: "A Student ID is enough to view live status — perfect for parents." },
               { icon: Shield, title: "Role-based permissions", desc: "Students see their record. Supervisors see their assignees. Admins see everything." }
             ].map((item, i) => (
-              <div key={i} className="bg-white p-8 rounded-3xl border border-zinc-100 hover:shadow-xl transition">
+              <div key={i} className="bg-white p-5 sm:p-8 rounded-3xl border border-zinc-100 hover:shadow-xl transition">
                 <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center mb-6">
                   <item.icon className="w-7 h-7 text-blue-950" />
                 </div>
@@ -105,10 +105,10 @@ function Home() {
         </div>
       </section>
      {/* Testimonial + CTA */}
-      <section className="py-20 px-6 max-w-7xl mx-auto">
+      <section className="py-14 sm:py-20 px-4 sm:px-6 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto">
           <div className="text-4xl mb-6">★★★★★</div>
-          <p className="text-3xl leading-tight font-medium">
+          <p className="text-xl sm:text-2xl lg:text-3xl leading-tight font-medium">
             "Before InternHub, I was chasing 240 students for paper logbooks every term. 
             Now I open one dashboard on a Friday morning and the term grades itself."
           </p>
@@ -119,17 +119,17 @@ function Home() {
       {/* Final CTA */}
       <section className="bg-blue-950 text-white py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-5xl font-bold mb-4">Bring your department on next term.</h2>
-          <p className="text-xl text-blue-200 mb-10">Free to onboard for the first cohort. White-glove migration of existing student records included.</p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">Bring your department on next term.</h2>
+          <p className="text-base sm:text-xl text-blue-200 mb-10">Free to onboard for the first cohort. White-glove migration of existing student records included.</p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/register">
-            <button className="px-10 py-4 bg-white text-blue-950 rounded-2xl font-medium text-lg hover:bg-blue-50 transition">
+            <Link to="/register" className="w-full sm:w-auto">
+            <button className="w-full sm:w-auto px-8 sm:px-10 py-4 bg-white text-blue-950 rounded-2xl font-medium text-lg hover:bg-blue-50 transition">
               Get started
             </button>
             </Link>
-            <Link to="/track">
-              <button className="px-10 py-4 border border-blue-700 text-white rounded-2xl font-medium text-lg hover:bg-blue-900 transition">
+            <Link to="/track" className="w-full sm:w-auto">
+              <button className="w-full sm:w-auto px-8 sm:px-10 py-4 border border-blue-700 text-white rounded-2xl font-medium text-lg hover:bg-blue-900 transition">
                 Track Your Progress
               </button>
             </Link>

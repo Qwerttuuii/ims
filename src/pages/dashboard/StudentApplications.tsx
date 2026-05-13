@@ -6,10 +6,6 @@ export default function StudentApplications() {
   const [applications, setApplications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchMyApplications();
-  }, []);
-
   const fetchMyApplications = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -32,6 +28,10 @@ export default function StudentApplications() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchMyApplications();
+  }, []);
 
   if (loading) {
     return (

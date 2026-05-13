@@ -9,9 +9,12 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
+const TOTAL_WEEKS = 24; // Standard SIWES duration
+
 export default function StudentDashboard() {
   const [profile, setProfile] = useState<any>(null);
   const [logs, setLogs] = useState<any[]>([]);
+  const [allApprovedCount, setAllApprovedCount] = useState(0);
   const [placement, setPlacement] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -26,6 +29,7 @@ export default function StudentDashboard() {
           return;
         }
 
+        // Fetch profile
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('full_name, student_id, department, role')
@@ -44,7 +48,7 @@ export default function StudentDashboard() {
 
         setProfile(profileData);
 
-        // ✅ Fixed: was 'logbook', correct table is 'logbooks'
+        // Fetch recent 5 logs for display
         const { data: logsData } = await supabase
           .from('logbooks')
           .select('*')
@@ -54,6 +58,16 @@ export default function StudentDashboard() {
 
         setLogs(logsData || []);
 
+        // Fetch ALL approved logs for accurate count
+        const { count: approvedCount } = await supabase
+          .from('logbooks')
+          .select('*', { count: 'exact', head: true })
+          .eq('student_id', authUser.id)
+          .eq('status', 'approved');
+
+        setAllApprovedCount(approvedCount || 0);
+
+        // Fetch placement
         const { data: placementData } = await supabase
           .from('placements')
           .select('*')
@@ -98,6 +112,17 @@ export default function StudentDashboard() {
 
   const firstName = profile?.full_name?.split(' ')[0] || 'Student';
 
+  // Days remaining calculated from approved logbooks
+  const weeksCompleted = allApprovedCount;
+  const weeksRemaining = Math.max(0, TOTAL_WEEKS - weeksCompleted);
+  const daysRemaining = weeksRemaining * 7;
+
+  // Progress percentage
+  const progressPercent = Math.min(100, Math.round((weeksCompleted / TOTAL_WEEKS) * 100));
+
+  // Approved count from visible logs (for the stat card)
+  const pendingCount = logs.filter(l => l.status === 'pending').length;
+
   return (
     <div className="min-h-screen bg-zinc-50">
       {/* Header */}
@@ -112,10 +137,7 @@ export default function StudentDashboard() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
-            <button className="flex items-center justify-center gap-2 px-5 sm:px-6 py-3 bg-white border border-zinc-300 rounded-2xl hover:bg-zinc-50 transition font-medium text-sm">
-              <Briefcase className="w-4 h-4" />
-              Browse opportunities
-            </button>
+            
             <button className="flex items-center justify-center gap-2 px-5 sm:px-6 py-3 bg-blue-950 text-white rounded-2xl hover:bg-blue-900 transition font-medium text-sm">
               <ArrowRight className="w-4 h-4" />
               Submit weekly log
@@ -132,31 +154,29 @@ export default function StudentDashboard() {
             {[
               {
                 label: 'PROGRESS',
-                value: placement ? `${placement.progress || 0}%` : '0%',
-                sub: '0/24 weeks',
+                value: `${progressPercent}%`,
+                sub: `${weeksCompleted}/${TOTAL_WEEKS} weeks approved`,
                 icon: TrendingUp,
                 color: 'text-emerald-600',
               },
               {
                 label: 'LOGS APPROVED',
-                value: logs.filter(l => l.status === 'approved').length.toString(),
+                value: allApprovedCount.toString(),
                 sub: 'Total approved',
                 icon: Award,
                 color: 'text-blue-600',
               },
               {
                 label: 'PENDING REVIEW',
-                value: logs.filter(l => l.status === 'pending').length.toString(),
+                value: pendingCount.toString(),
                 sub: 'Awaiting approval',
                 icon: Clock,
                 color: 'text-amber-600',
               },
               {
                 label: 'DAYS REMAINING',
-                value: placement
-                  ? Math.max(0, Math.ceil((new Date(placement.end_date).getTime() - Date.now()) / 86400000)).toString()
-                  : '—',
-                sub: 'Until end date',
+                value: daysRemaining.toString(),
+                sub: `${weeksRemaining} weeks left of ${TOTAL_WEEKS}`,
                 icon: Calendar,
                 color: 'text-purple-600',
               },
@@ -186,7 +206,10 @@ export default function StudentDashboard() {
             {logs.length > 0 ? (
               <div className="space-y-5">
                 {logs.map((log) => (
-                  <div key={log.id} className="flex flex-col gap-3 sm:flex-row sm:gap-5 pb-5 border-b border-zinc-100 last:border-0 last:pb-0">
+                  <div
+                    key={log.id}
+                    className="flex flex-col gap-3 sm:flex-row sm:gap-5 pb-5 border-b border-zinc-100 last:border-0 last:pb-0"
+                  >
                     <div className="sm:w-20 shrink-0">
                       <p className="text-xs font-mono text-zinc-400 uppercase">Week {log.week}</p>
                       <p className="text-xs text-zinc-400 mt-0.5">
@@ -232,24 +255,35 @@ export default function StudentDashboard() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
                       <p className="text-blue-300 text-xs mb-1">Start Date</p>
-                      <p className="font-medium text-sm">{new Date(placement.start_date).toLocaleDateString()}</p>
+                      <p className="font-medium text-sm">
+                        {placement.start_date
+                          ? new Date(placement.start_date).toLocaleDateString()
+                          : 'Not set'}
+                      </p>
                     </div>
                     <div>
                       <p className="text-blue-300 text-xs mb-1">End Date</p>
-                      <p className="font-medium text-sm">{new Date(placement.end_date).toLocaleDateString()}</p>
+                      <p className="font-medium text-sm">
+                        {placement.end_date
+                          ? new Date(placement.end_date).toLocaleDateString()
+                          : 'Not set'}
+                      </p>
                     </div>
                   </div>
                   <div>
                     <div className="flex justify-between text-xs mb-2">
                       <span className="text-blue-300">Progress</span>
-                      <span className="font-semibold">{placement.progress || 0}%</span>
+                      <span className="font-semibold">{progressPercent}%</span>
                     </div>
                     <div className="h-2 bg-white/20 rounded-full overflow-hidden">
                       <div
                         className="h-2 bg-amber-400 rounded-full transition-all"
-                        style={{ width: `${placement.progress || 0}%` }}
+                        style={{ width: `${progressPercent}%` }}
                       />
                     </div>
+                    <p className="text-blue-300 text-xs mt-2">
+                      {weeksCompleted} of {TOTAL_WEEKS} weeks completed
+                    </p>
                   </div>
                 </div>
               </>

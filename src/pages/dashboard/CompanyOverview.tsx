@@ -10,10 +10,6 @@ export default function CompanyOverview() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    fetchCompanyData();
-  }, []);
-
   const fetchCompanyData = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -57,6 +53,10 @@ export default function CompanyOverview() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchCompanyData();
+  }, []);
 
   if (loading) {
     return (

@@ -9,10 +9,6 @@ export default function StudentOpportunities() {
   const [loading, setLoading] = useState(true);
   const [selectedOpening, setSelectedOpening] = useState<any>(null);
 
-  useEffect(() => {
-    fetchOpenings();
-  }, []);
-
   const fetchOpenings = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -40,6 +36,10 @@ export default function StudentOpportunities() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchOpenings();
+  }, []);
 
   const handleApplyClick = (opening: any) => {
     setSelectedOpening(opening);

@@ -11,10 +11,6 @@ export default function CompanyOpenings() {
   const [deleting, setDeleting] = useState<string | null>(null);
   const { showAlert } = useAppAlert();
 
-  useEffect(() => {
-    fetchOpenings();
-  }, []);
-
   const fetchOpenings = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -34,6 +30,10 @@ export default function CompanyOpenings() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchOpenings();
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this opening?')) return;

@@ -8,15 +8,15 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
-      <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between">
 
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-950 rounded-xl flex items-center justify-center">
-            <GraduationCap className="w-6 h-6 text-white" />
+        <Link to="/" className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-blue-950 rounded-xl flex shrink-0 items-center justify-center">
+            <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">InternHub</h1>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">InternHub</h1>
             <p className="text-xs text-zinc-500 -mt-1">SIWES PORTAL</p>
           </div>
         </Link>
@@ -59,7 +59,7 @@ export default function Navbar() {
 
         {/* 🔥 Mobile Hamburger */}
         <button
-          className="md:hidden"
+          className="md:hidden p-2 -mr-2"
           onClick={() => setMenuOpen(!menuOpen)}
         >
           {menuOpen ? <X size={28} /> : <Menu size={28} />}
