@@ -1,6 +1,7 @@
 import {  ArrowRight, BookOpen, Users, Shield, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import heroImage from '../../assets/images/internship-hero.avif';
 
 function Home() {
 
@@ -13,7 +14,7 @@ function Home() {
           <div className="space-y-6 sm:space-y-8">
             <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-sm">
               <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-            Active For Students
+            Active For All Students
             </div>
 
             <h1 className="text-4xl min-[380px]:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight">
@@ -45,10 +46,10 @@ function Home() {
           </div>
 
           <div className="relative hidden md:block">
-            <img
-              src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800"
-              alt="Student"
-              className="rounded-3xl shadow-2xl w-full"
+           <img
+              src={heroImage}           
+              alt="Student doing internship"
+              className="rounded-3xl shadow-2xl w-full object-cover"
             />
             <div className="absolute -top-6 -right-6 bg-white p-5 rounded-2xl shadow-xl max-w-[260px]">
               <div className="flex items-center gap-3 mb-3">
@@ -82,7 +83,7 @@ function Home() {
       <section className="py-14 sm:py-20 bg-zinc-50 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <p className="text-blue-600 font-medium">02 — WHAT YOU ACTUALLY GET</p>
+            <p className="text-blue-600 font-medium">WHAT YOU ACTUALLY GET</p>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 tracking-tight">A logbook that doesn't go missing the night before submission.</h2>
           </div>
 
@@ -112,7 +113,7 @@ function Home() {
             "Before InternHub, I was chasing 240 students for paper logbooks every term. 
             Now I open one dashboard on a Friday morning and the term grades itself."
           </p>
-          <p className="mt-6 text-zinc-600">Dr. Adebola Williams — SIWES Coordinator, Covenant University</p>
+          <p className="mt-6 text-zinc-600">Dr. Adebola Williams  SIWES Coordinator, Covenant University</p>
         </div>
       </section>
 
