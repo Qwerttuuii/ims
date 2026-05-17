@@ -41,12 +41,10 @@ export default function CompanyOverview() {
           .from('applications')
           .select('*, student:profiles!student_id(full_name, student_id), opening:openings!opening_id(title)')
           .in('opening_id', openingIds)
-          .order('created_at', { ascending: false })
-          .limit(5);
+          .order('created_at', { ascending: false });
 
         setApplicants(applicantsData || []);
       }
-
     } catch (err) {
       console.error(err);
     } finally {
@@ -70,6 +68,7 @@ export default function CompanyOverview() {
   }
 
   const activeOpenings = openings.filter(o => o.status === 'active').length;
+  const recentApplicants = applicants.slice(0, 5);
 
   return (
     <div className="min-h-screen bg-zinc-50 p-4 sm:p-6 lg:p-8">
@@ -131,7 +130,7 @@ export default function CompanyOverview() {
               </div>
             ) : (
               <div className="space-y-3">
-                {applicants.map((app) => (
+                {recentApplicants.map((app) => (
                   <div key={app.id} className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 hover:bg-zinc-50 rounded-2xl transition">
                     <div className="min-w-0">
                       <p className="font-medium">{app.student?.full_name || 'Student'}</p>
