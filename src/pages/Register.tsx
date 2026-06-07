@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { GraduationCap, Building2, UserCheck, ArrowRight } from 'lucide-react';
+import { GraduationCap, Building2, UserCheck, ArrowRight, AlertCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
@@ -10,6 +10,7 @@ export default function Register() {
   const [selectedRole, setSelectedRole] = useState<Role>('student');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ export default function Register() {
     email: '',
     studentId: '',
     department: '',
-    schoolName: '',   // ← added
+    schoolName: '',
     password: '',
     confirmPassword: '',
   });
@@ -25,14 +26,21 @@ export default function Register() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError('');
+    setSuccessMessage('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
 
+    // Basic Validation
     if (!formData.fullName.trim()) {
       setError('Please enter your full name.');
+      return;
+    }
+    if (!formData.email.trim()) {
+      setError('Please enter your email address.');
       return;
     }
     if (formData.password.length < 6) {
@@ -44,56 +52,83 @@ export default function Register() {
       return;
     }
 
+    // Role-specific validation
+    if ((selectedRole === 'student' || selectedRole === 'supervisor') && !formData.schoolName.trim()) {
+      setError('School/University name is required.');
+      return;
+    }
+    if (selectedRole === 'student' && !formData.studentId.trim()) {
+      setError('Student ID is required.');
+      return;
+    }
+    if (selectedRole === 'company' && !formData.department.trim()) {
+      setError('Company/Organisation name is required.');
+      return;
+    }
+
     setLoading(true);
 
     try {
       const { data, error: signUpError } = await supabase.auth.signUp({
-        email: formData.email,
+        email: formData.email.trim().toLowerCase(),
         password: formData.password,
         options: {
           data: {
-            full_name: formData.fullName,
+            full_name: formData.fullName.trim(),
             role: selectedRole,
-            student_id: selectedRole === 'student' ? formData.studentId || null : null,
-            department: formData.department || null,
+            student_id: selectedRole === 'student' ? formData.studentId.trim() : null,
+            department: formData.department.trim() || null,
             school_name: (selectedRole === 'student' || selectedRole === 'supervisor')
-              ? formData.schoolName || null
+              ? formData.schoolName.trim()
               : null,
-          }
-        }
+          },
+        },
       });
 
-      if (signUpError) throw signUpError;
+      if (signUpError) {
+        if (signUpError.message.includes('already registered') || 
+            signUpError.status === 422) {
+          setError("This email is already registered. Please try logging in instead.");
+        } else {
+          setError(signUpError.message);
+        }
+        return;
+      }
 
       if (!data.user) {
         throw new Error('Account creation failed. Please try again.');
       }
 
+      // Create/Update Profile
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
           id: data.user.id,
-          full_name: formData.fullName,
+          full_name: formData.fullName.trim(),
           role: selectedRole,
-          student_id: selectedRole === 'student' ? formData.studentId || null : null,
-          department: formData.department || null,
-          school_name: (selectedRole === 'student' || selectedRole === 'supervisor')  // ← added
-            ? formData.schoolName || null
+          student_id: selectedRole === 'student' ? formData.studentId.trim() : null,
+          department: formData.department.trim() || null,
+          school_name: (selectedRole === 'student' || selectedRole === 'supervisor')
+            ? formData.schoolName.trim()
             : null,
-        }, {
-          onConflict: 'id'
-        });
+        }, { onConflict: 'id' });
 
       if (profileError) {
-        console.error('Profile upsert error:', profileError);
-        throw new Error('Account created but profile setup failed: ' + profileError.message);
+        console.error('Profile error:', profileError);
+        // Still show success since auth succeeded
       }
 
-      navigate('/login', {
-        state: { message: 'Account created! Please sign in.' }
-      });
+      setSuccessMessage('Account created successfully! Please check your email to confirm your account.');
+
+      // Redirect to login after short delay
+      setTimeout(() => {
+        navigate('/login', { 
+          state: { message: 'Account created successfully! Please sign in.' } 
+        });
+      }, 2000);
 
     } catch (err: any) {
+      console.error(err);
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
@@ -116,13 +151,22 @@ export default function Register() {
               <p className="text-zinc-600 mt-2">Join InternHub as a student, company or supervisor.</p>
             </div>
 
+            {/* Error Message */}
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-2xl mb-6 text-sm text-center">
-                {error}
+              <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-2xl mb-6 flex gap-3">
+                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <p className="text-sm">{error}</p>
               </div>
             )}
 
-            {/* Role Tabs */}
+            {/* Success Message */}
+            {successMessage && (
+              <div className="bg-green-50 border border-green-200 text-green-700 p-4 rounded-2xl mb-6 text-sm">
+                {successMessage}
+              </div>
+            )}
+
+            {/* Role Selection */}
             <div className="grid grid-cols-1 min-[420px]:grid-cols-3 mb-8 bg-zinc-100 rounded-xl p-1 gap-1">
               {[
                 { role: 'student', label: 'Student', icon: GraduationCap },
@@ -132,7 +176,10 @@ export default function Register() {
                 <button
                   key={role}
                   type="button"
-                  onClick={() => setSelectedRole(role as Role)}
+                  onClick={() => {
+                    setSelectedRole(role as Role);
+                    setError('');
+                  }}
                   className={`w-full py-3 px-3 text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition-all ${
                     selectedRole === role
                       ? 'bg-white shadow text-blue-950'
@@ -176,13 +223,13 @@ export default function Register() {
                 />
               </div>
 
-              {/* ── STUDENT FIELDS ── */}
+              {/* Student Fields */}
               {selectedRole === 'student' && (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-semibold text-zinc-500 mb-2 tracking-wide">
-                        STUDENT ID
+                        STUDENT ID <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -191,6 +238,7 @@ export default function Register() {
                         onChange={handleChange}
                         className="w-full px-5 py-3.5 border border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-950 focus:border-transparent"
                         placeholder="STU/2024/099"
+                        required
                       />
                     </div>
                     <div>
@@ -208,10 +256,9 @@ export default function Register() {
                     </div>
                   </div>
 
-                  {/* School name for students */}
                   <div>
                     <label className="block text-xs font-semibold text-zinc-500 mb-2 tracking-wide">
-                      SCHOOL / UNIVERSITY
+                      SCHOOL / UNIVERSITY <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -220,16 +267,17 @@ export default function Register() {
                       onChange={handleChange}
                       className="w-full px-5 py-3.5 border border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-950 focus:border-transparent"
                       placeholder="e.g. University of Lagos"
+                      required
                     />
                   </div>
                 </>
               )}
 
-              {/* ── COMPANY FIELDS ── */}
+              {/* Company Fields */}
               {selectedRole === 'company' && (
                 <div>
                   <label className="block text-xs font-semibold text-zinc-500 mb-2 tracking-wide">
-                    COMPANY / ORGANISATION NAME
+                    COMPANY / ORGANISATION NAME <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -237,12 +285,13 @@ export default function Register() {
                     value={formData.department}
                     onChange={handleChange}
                     className="w-full px-5 py-3.5 border border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-950 focus:border-transparent"
-                    placeholder="e.g. Acme Technologies"
+                    placeholder="e.g. MTN Nigeria, Andela, etc."
+                    required
                   />
                 </div>
               )}
 
-              {/* ── SUPERVISOR FIELDS ── */}
+              {/* Supervisor Fields */}
               {selectedRole === 'supervisor' && (
                 <>
                   <div>
@@ -258,11 +307,9 @@ export default function Register() {
                       placeholder="e.g. Faculty of Engineering"
                     />
                   </div>
-
-                  {/* School name for supervisors */}
                   <div>
                     <label className="block text-xs font-semibold text-zinc-500 mb-2 tracking-wide">
-                      SCHOOL / INSTITUTION
+                      SCHOOL / INSTITUTION <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -271,6 +318,7 @@ export default function Register() {
                       onChange={handleChange}
                       className="w-full px-5 py-3.5 border border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-950 focus:border-transparent"
                       placeholder="e.g. University of Lagos"
+                      required
                     />
                   </div>
                 </>
@@ -304,10 +352,6 @@ export default function Register() {
                   placeholder="Repeat your password"
                   required
                 />
-              </div>
-
-              <div className="bg-blue-50 border border-blue-100 rounded-2xl px-4 py-3 text-sm text-blue-800">
-                Registering as: <span className="font-semibold capitalize">{selectedRole}</span>
               </div>
 
               <button
