@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { GraduationCap, Building2, UserCheck, ArrowRight, AlertCircle } from 'lucide-react';
+import { GraduationCap, Building2, UserCheck, ArrowRight, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
@@ -11,6 +11,8 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -328,30 +330,50 @@ export default function Register() {
                 <label className="block text-xs font-semibold text-zinc-500 mb-2 tracking-wide">
                   PASSWORD
                 </label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full px-5 py-3.5 border border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-950 focus:border-transparent"
-                  placeholder="At least 6 characters"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full px-5 py-3.5 pr-12 border border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-950 focus:border-transparent"
+                    placeholder="At least 6 characters"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-zinc-500 mb-2 tracking-wide">
                   CONFIRM PASSWORD
                 </label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="w-full px-5 py-3.5 border border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-950 focus:border-transparent"
-                  placeholder="Repeat your password"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="w-full px-5 py-3.5 pr-12 border border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-950 focus:border-transparent"
+                    placeholder="Repeat your password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+                    tabIndex={-1}
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
               </div>
 
               <button
